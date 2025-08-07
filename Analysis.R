@@ -71,7 +71,7 @@ postcodes <- unique(final$postcodet)
 
 
 
-geo_data <- lapply(pc_nog, function(pc) {
+geo_data <- lapply(postcodes, function(pc) {
   res <- tryCatch(postcode_lookup(pc), error = function(e) NULL)
   if (!is.null(res)) {
     data.frame(postcodet = pc, lat = res$latitude, lon = res$longitude)
@@ -84,30 +84,14 @@ geo_df <- do.call(rbind, geo_data)
 
 final_geo <- left_join(final, geo_df, by = "postcodet", relationship = "many-to-many")
 
-
-
-lookup_result <- postcode_lookup("KT35PE")
-
-
-library(leaflet)
-
-leaflet() %>%
-  addTiles() %>%
-  setView(lng = -3.7, lat = 40.4, zoom = 5) 
-
-
-
-
-
-
 uk_map <- renderLeaflet({
   leaflet(final_geo) %>%
     addTiles() %>%
-    setView(lng = -2.03, lat = 55.8, zoom = 5) %>% 
+    setView(lng = -2.03, lat = 52.8, zoom = 6) %>% 
     addCircleMarkers(
       lng = ~lon,
       lat = ~lat,
-      popup = ~paste(SCHNAME,"<br>", "21/22 Grade", "<br>", PCODE),
+      popup = ~paste(SCHNAME,"<br>", "23/24 Grade","<br>", final$`23/24 Grade`, "<br>", PCODE),
       radius = 4,
       color = "blue"
     )
