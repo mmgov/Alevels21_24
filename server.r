@@ -1,9 +1,11 @@
 library("DT")
 library("tidyverse")
 library("cpp11")
+library(postcodesioR)
+library(leaflet)
 
 alc2324<-read_csv("./england_ks5final2324.csv", na = c('*','','na')) %>% 
-  select('URN','REGION','ESTAB','SCHNAME','TALLPPE_ALEV_1618','TALLPUP_ALEV_1618','TALLPPEGRD_ALEV_1618','NFTYPE/FESITYPE','TOWN','PCON_NAME')%>%
+  select('URN','REGION','ESTAB','SCHNAME','TALLPPE_ALEV_1618','TALLPUP_ALEV_1618','TALLPPEGRD_ALEV_1618','NFTYPE/FESITYPE','TOWN','PCON_NAME','PCODE')%>%
   rename(SCHOOLTYPE = 'NFTYPE/FESITYPE')%>% 
   filter (
     !TALLPPE_ALEV_1618 %in% c('NE','SUPP',NA)
@@ -31,6 +33,24 @@ rename('22/23' = 'TALLPPE_ALEV_1618') %>%
 SCHOOLTYPE<- c('Academy Converter','Independent School','Academy Sponsor Led','Community School','Voluntary Aided School','Foundation School','University Technical College','Free School – Mainstream', 'Academy 16-19 Converter','Voluntary Controlled School','Free School - 16-19')
 ACRONYM<-c('ACC','IND','AC','CY','VA','FD','UTC','F','ACC1619','VC','F1619')
 super_sleepers <- data.frame(ACRONYM, SCHOOLTYPE)
+
+postcodes <- unique(final$PCODE)
+
+
+geo_data <- lapply(postcodes, function(pc) {
+  res <- tryCatch(postcode_lookup(pc), error = function(e) NULL)
+  if (!is.null(res)) {
+    data.frame(PCODE = pc, lat = res$latitude, lon = res$longitude)
+  } else {
+    data.frame(PCODE = pc, lat = NA, lon = NA)
+  }
+})
+
+geo_df <- do.call(rbind, geo_data)
+
+# Merge lat/lon back to your final data
+final_geo <- left_join(final, geo_df, by = "PCODE")
+
 
 
 function(input, output) {
@@ -84,7 +104,7 @@ output$Search <- renderDT({
     # rename('23/24' = 'TALLPPE_ALEV_1618')%>% 
     # rename('23/24 Grade' = 'TALLPPEGRD_ALEV_1618')%>% 
     select('SCHOOLNAME','SCHOOLTYPE','PARLIAMENTARY CONTITUENCY'
-           ,'TOWN','21/22','21/22 Grade','22/23','22/23 Grade','23/24','23/24 Grade') %>% 
+           ,'TOWN','PCODE','21/22','21/22 Grade','22/23','22/23 Grade','23/24','23/24 Grade') %>% 
     arrange(SCHOOLNAME)
 })
 
@@ -113,6 +133,17 @@ final %>%
   summary()
 
 
+output$uk_map <- renderLeaflet({
+  leaflet(final_geo) %>%
+    addTiles() %>%
+    addCircleMarkers(
+      lng = ~lon,
+      lat = ~lat,
+      popup = ~paste(SCHNAME, "<br>", PCODE),
+      radius = 4,
+      color = "blue"
+    )
+})
 
 
 
