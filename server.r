@@ -58,11 +58,48 @@ alc2122<-read_csv("./england_ks5final2122.csv", na = c('*','','na')) %>%
 
 
 final<-left_join(alc2324,(alc2223 %>% select(URN,'22/23','22/23 Grade')), by = "URN") %>% 
-  left_join(.,(alc2122 %>% select(URN,'21/22','21/22 Grade')), by = "URN")
+  left_join(.,(alc2122 %>% select(URN,'21/22','21/22 Grade')), by = "URN") %>% 
+  mutate(color_col = case_when(
+    `23/24 Grade` == "A+" ~ "lightgreen",
+    `23/24 Grade` == "A" ~ "lightgreen",
+    `23/24 Grade` == "A-" ~ "lightgreen",
+    `23/24 Grade` == "B+" ~ "darkgreen",
+    `23/24 Grade` == "B" ~ "darkgreen",
+    `23/24 Grade` == "B-" ~ "darkgreen",
+    `23/24 Grade` == "C+" ~ "yellow",
+    `23/24 Grade` == "C" ~ "yellow",
+    `23/24 Grade` == "C-" ~ "yellow",
+    `23/24 Grade` == "D+" ~ "red",
+    `23/24 Grade` == "D" ~ "red",
+    `23/24 Grade` == "D-" ~ "red",
+    `23/24 Grade` == "E+" ~ "darkred",
+    `23/24 Grade` == "E" ~ "darkred",
+    `23/24 Grade` == "E-" ~ "darkred",
+    TRUE ~ "blue")) %>% 
+  select(URN,SCHNAME,SCHOOLTYPE,TOWN,PCON_NAME,PCODE,'21/22','21/22 Grade','22/23',
+         '22/23 Grade','23/24','23/24 Grade',color_col)
+
+final$postcodet<-str_replace_all(final$PCODE,fixed(" "),"")
+
+postcodes <- unique(final$postcodet)
 
 
 
-summarise(final)
+geo_data <- lapply(postcodes, function(pc) {
+  res <- tryCatch(postcode_lookup(pc), error = function(e) NULL)
+  if (!is.null(res)) {
+    data.frame(postcodet = pc, lat = res$latitude, lon = res$longitude)
+  } else {
+    data.frame(postcodet = pc, lat = NA, lon = NA)
+  }
+})
+
+geo_df <- do.call(rbind, geo_data)
+
+final_geo <- left_join(final, geo_df, by = "postcodet", relationship = "many-to-many")
+
+
+
 
 
 
@@ -116,6 +153,27 @@ output$download_scores <- downloadHandler(
               file)
   }
 )
+
+
+output$uk_map <- renderLeaflet({
+  leaflet(final_geo) %>%
+    addTiles() %>%
+    setView(lng = -2.03, lat = 52.8, zoom = 6) %>% 
+    addCircleMarkers(
+      lng = ~lon,
+      lat = ~lat,
+      popup = ~paste(SCHNAME,"<br>", "23/24 Grade","<br>", final$`23/24 Grade`, "<br>", PCODE),
+      radius = 4,
+      #color = ~color_col
+      color = "black",         # Outline color
+      weight = 2,              # Outline thickness
+      fillColor = ~color_col,  # Fill color
+      fillOpacity = 0.8,       # Fill opacity
+      stroke = TRUE  
+    )
+})
+
+
 
 }
 
