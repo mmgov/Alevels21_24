@@ -55,15 +55,31 @@ ACRONYM<-c('ACC','IND','AC','CY','VA','FD','UTC','F','ACC1619','VC','F1619')
 
 
 
+
+
+
 final<-left_join(alc2324,(alc2223 %>% select(URN,'22/23','22/23 Grade')), by = "URN") %>% 
   left_join(.,(alc2122 %>% select(URN,'21/22','21/22 Grade')), by = "URN") %>% 
+  mutate(color_col = case_when(
+    `23/24 Grade` == "A+" ~ "lightgreen",
+    `23/24 Grade` == "A" ~ "lightgreen",
+    `23/24 Grade` == "A-" ~ "lightgreen",
+    `23/24 Grade` == "B+" ~ "darkgreen",
+    `23/24 Grade` == "B" ~ "darkgreen",
+    `23/24 Grade` == "B-" ~ "darkgreen",
+    `23/24 Grade` == "C+" ~ "yellow",
+    `23/24 Grade` == "C" ~ "yellow",
+    `23/24 Grade` == "C-" ~ "yellow",
+    `23/24 Grade` == "D+" ~ "red",
+    `23/24 Grade` == "D" ~ "red",
+    `23/24 Grade` == "D-" ~ "red",
+    `23/24 Grade` == "E+" ~ "darkred",
+    `23/24 Grade` == "E" ~ "darkred",
+    `23/24 Grade` == "E-" ~ "darkred",
+    TRUE ~ "blue")) %>% 
   select(URN,SCHNAME,SCHOOLTYPE,TOWN,PCON_NAME,PCODE,'21/22','21/22 Grade','22/23',
-                        '22/23 Grade','23/24','23/24 Grade')
+                        '22/23 Grade','23/24','23/24 Grade',color_col)
 
-# Define a vector of postcodes
-# postcodes <- c("M1 1AE", "SW1A 1AA", "EH1 1BB")  # Replace with your postcodes
-
-summarise(final)
 
 final$postcodet<-str_replace_all(final$PCODE,fixed(" "),"")
 
@@ -93,6 +109,11 @@ uk_map <- renderLeaflet({
       lat = ~lat,
       popup = ~paste(SCHNAME,"<br>", "23/24 Grade","<br>", final$`23/24 Grade`, "<br>", PCODE),
       radius = 4,
-      color = "blue"
+      #color = ~color_col
+      color = "black",         # Outline color
+      weight = 2,              # Outline thickness
+      fillColor = ~color_col,  # Fill color
+      fillOpacity = 0.8,       # Fill opacity
+      stroke = TRUE  
     )
 })
