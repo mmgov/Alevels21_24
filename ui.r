@@ -7,7 +7,7 @@ shinythemes::themeSelector()
 
 navbarPage(
   
-"A level Attainment in England 2018/19, 2021/22 and 2022/23",
+"A level Attainment in England 2021/22, 2022/23 and 2023/24",
 # tabPanel(
 #   "App Info",
 #   fluidPage(
@@ -178,7 +178,7 @@ tabPanel(
     br(),
     br(),
     br(),
-    strong("TALLPPE_ALEV_1618 Score by Individual School 18/19,21/22 and 22/23"),
+    strong("TALLPPE_ALEV_1618 Score by Individual School 21/22, 22/23 and 23/24"),
     br(),
     br(),
     br(),
@@ -193,28 +193,28 @@ tabPanel(
 ),
 
 
-tabPanel(
-  "A Level Attainment By School",
-  mainPanel(
-    strong("A Level Attainment By School", style = "font-size: 30px;"),
-    br(),
-    br(),
-    p("The below allows you to search for the mean TALLPPE_ALEV_1618 of any individual school, from the 18/19,21/22 and  22/23 exam diet. 
-    You can also download the entire DfE dataset from the 22/23 exam diet from the Download Data button."),  
-    p("Please read the notebook exploring the data and this topic in more detail at the below link"),
-    a("A level attainment differences by school type", href = "https://www.kaggle.com/code/mmcgovern/a-level-attainment-differences-by-school-types"),
-    br(),
-    br(),
-    br(),
-    strong("TALLPPE_ALEV_1618 Score by Individual School 18/19,21/22 and 22/23"),
-    br(),
-    br(),
-    br(),
-  ),
-  fluidPage(
-    leafletOutput("uk_map", height = 600)
-  )
-),
+# tabPanel(
+#   "A Level Attainment By School",
+#   mainPanel(
+#     strong("A Level Attainment By School", style = "font-size: 30px;"),
+#     br(),
+#     br(),
+#     p("The below allows you to search for the mean TALLPPE_ALEV_1618 of any individual school, from the 21/22,22/23 and 23/24 exam diet. 
+#     You can also download the entire DfE dataset from the 22/23 exam diet from the Download Data button."),  
+#     p("Please read the notebook exploring the data and this topic in more detail at the below link"),
+#     a("A level attainment differences by school type", href = "https://www.kaggle.com/code/mmcgovern/a-level-attainment-differences-by-school-types"),
+#     br(),
+#     br(),
+#     br(),
+#     strong("TALLPPE_ALEV_1618 Score by Individual School 18/19,21/22 and 22/23"),
+#     br(),
+#     br(),
+#     br(),
+#   ),
+#   fluidPage(
+#     leafletOutput("uk_map", height = 600)
+#   )
+# ),
 
 collapsible = TRUE
 )
