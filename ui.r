@@ -140,11 +140,9 @@ tabPanel(
     br(),
     
     p("
-    The specific attainment measure used is TALLPPE_ALEV_1618, which is the average point score per A level entry, which I understand to be a score
+    This app displays the attainment at A Level for every school/college in England for the exam diets 21/22,22/23 and 23/24. The specific attainment measure used is TALLPPE_ALEV_1618, which is the average point score per A level entry, which I understand to be a score
       which represents the attainment for each person/pupil who sat A level examinations that academic year. The analysis presented here uses the mean (or average) TALLPPE_ALEV_1618 for
-        each indvidual school/college, which is then grouped up and averaged for each of the different school types. 
-        In other words, the DfE publishes the mean TALLPPE_ALEV_1618 of all the pupils attending a particular school. I then have taken that average
-        and grouped up all the individual mean school scores by their category/type and made a new average based on that school type. The end result is actually an average of an average.
+        each indvidual school/college. The end result is actually an average of an average.
       The below table shows the mean TALLPPE_ALEV_1618 for all schools/colleges for each of the years 18/19,21/22 and 22/23
       
       "),
@@ -171,8 +169,8 @@ tabPanel(
     strong("A Level Attainment By School", style = "font-size: 30px;"),
     br(),
     br(),
-    p("The below allows you to search for the mean TALLPPE_ALEV_1618 of any individual school, from the 18/19,21/22 and  22/23 exam diet. 
-    You can also download the entire DfE dataset from the 22/23 exam diet from the Download Data button."),  
+    p("The below allows you to search for the TALLPPE_ALEV_1618 of any individual school, from the 21/22,22/23 and 23/24 exam diet. 
+    You can also download the entire DfE dataset from the 23/24 exam diet from the Download Data button."),  
     p("Please read the notebook exploring the data and this topic in more detail at the below link"),
     a("A level attainment differences by school type", href = "https://www.kaggle.com/code/mmcgovern/a-level-attainment-differences-by-school-types"),
     br(),
@@ -194,13 +192,13 @@ tabPanel(
 
 
 tabPanel(
-  "MAP",
+  "Map of 23/24 Attainment Grade",
   mainPanel(
-    strong("MAP", style = "font-size: 30px;"),
+    strong("Map or 23/24 Attainment Grade", style = "font-size: 30px;"),
     br(),
     br(),
-    p("The below allows you to search for the mean TALLPPE_ALEV_1618 of any individual school, from the 21/22,22/23 and 23/24 exam diet.
-    You can also download the entire DfE dataset from the 22/23 exam diet from the Download Data button."),
+    p("The below map displays the TALLPPE_ALEV_1618 of all individual schools from the 23/24 exam diet.
+    The pop up displays the name of the school, its postcode and its 23/24 grade. Light green represents A, Dark green represents B. Yellow represents C.  Light Red represents D. Dark Red represents E "),
     p("Please read the notebook exploring the data and this topic in more detail at the below link"),
     a("A level attainment differences by school type", href = "https://www.kaggle.com/code/mmcgovern/a-level-attainment-differences-by-school-types"),
     br(),
