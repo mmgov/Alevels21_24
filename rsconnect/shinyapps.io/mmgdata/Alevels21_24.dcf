@@ -1,0 +1,13 @@
+name: Alevels21_24
+title: Alevels21_24
+username: mmgdata
+account: mmgdata
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15206440
+bundleId:
+url: https://mmgdata.shinyapps.io/Alevels21_24/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Analysis.R
