@@ -5,7 +5,7 @@ account: mmgdata
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 15206440
-bundleId:
+bundleId: 10772719
 url: https://mmgdata.shinyapps.io/Alevels21_24/
 version: 1
 asMultiple: FALSE
